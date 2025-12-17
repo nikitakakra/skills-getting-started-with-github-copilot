@@ -59,6 +59,40 @@ document.addEventListener("DOMContentLoaded", () => {
           details.participants.forEach((participant) => {
             const participantItem = document.createElement("li");
             participantItem.textContent = participant;
+            
+            // Add delete icon
+            const deleteIcon = document.createElement("span");
+            deleteIcon.textContent = " ×";
+            deleteIcon.className = "delete-icon";
+            deleteIcon.style.cursor = "pointer";
+            deleteIcon.style.color = "#d32f2f";
+            deleteIcon.style.fontWeight = "bold";
+            deleteIcon.title = "Unregister participant";
+            deleteIcon.addEventListener("click", async (e) => {
+              e.stopPropagation();
+              if (confirm(`Unregister ${participant} from ${name}?`)) {
+                try {
+                  const response = await fetch(
+                    `/activities/${encodeURIComponent(name)}/unregister?email=${encodeURIComponent(participant)}`,
+                    {
+                      method: "DELETE",
+                    }
+                  );
+                  const result = await response.json();
+                  if (!response.ok) {
+                    showMessage(result.detail || result.message || "Unregister failed", "error");
+                  } else {
+                    showMessage(result.message || "Unregistered successfully", "success");
+                    await fetchActivities();
+                  }
+                } catch (error) {
+                  showMessage("Network error during unregister", "error");
+                  console.error("Error unregistering:", error);
+                }
+              }
+            });
+            participantItem.appendChild(deleteIcon);
+            
             participantsList.appendChild(participantItem);
           });
         } else {

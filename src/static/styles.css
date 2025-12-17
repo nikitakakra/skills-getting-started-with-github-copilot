@@ -138,6 +138,15 @@ section h3 {
   box-shadow: 0 1px 0 rgba(255,255,255,0.6) inset;
 }
 
+.delete-icon {
+  margin-left: 8px;
+  transition: opacity 0.2s;
+}
+
+.delete-icon:hover {
+  opacity: 0.7;
+}
+
 .no-participants {
   font-style: italic;
   color: #7b8290;
